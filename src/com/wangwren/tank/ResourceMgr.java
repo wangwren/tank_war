@@ -6,11 +6,16 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 /**
- * 加载图片
+ * 加载图片,写成单例模式
  * @author wwr
  *
  */
 public class ResourceMgr {
+	
+	private static final ResourceMgr INSTANCE = new ResourceMgr();
+	
+	//构造方法私有
+	private ResourceMgr() {}
 
 	//好坦克图片
 	public static BufferedImage goodTankL;

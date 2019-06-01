@@ -33,7 +33,7 @@ public class TankFrame extends Frame {
 		//不允许窗口改变大小
 		this.setResizable(false);
 		//设置标题
-		this.setTitle("tank war");
+		this.setTitle("坦克大战");
 		
 		//键盘事件
 		this.addKeyListener(new MyKeyListener());

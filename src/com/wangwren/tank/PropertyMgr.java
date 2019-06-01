@@ -5,7 +5,10 @@ import java.util.Properties;
 
 public class PropertyMgr {
 
-	static Properties props = new Properties();
+	private static final Properties props = new Properties();
+	
+	//构造方法私有，不允许创建对象
+	private PropertyMgr() {}
 	
 	static {
 		try {
