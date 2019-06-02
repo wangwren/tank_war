@@ -15,7 +15,7 @@ public class FourDirFireStrategy implements FireStrategy {
 		//获取方向，每个方向上都创建一个子弹
 		Dir[] dirs = Dir.values();
 		for(Dir dir : dirs) {
-			new Bullet(tank.getX(), tank.getY(), dir, tank.getGroup(), tank.tf);
+			new Bullet(tank.getX(), tank.getY(), dir, tank.getGroup(), tank.gm);
 		}
 				
 		//自己的坦克开火声音

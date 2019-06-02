@@ -36,20 +36,20 @@ public class Tank {
 	
 	private Random random = new Random();
 	
-	//拿一下TankFrame的引用，需要设置子弹
-	TankFrame tf = null;
+	//拿一下GameModel的引用，需要设置子弹
+	GameModel gm = null;
 	
 	//定义坦克开火策略
 	private FireStrategy fs;
 	
 	Rectangle rectTank = new Rectangle();
 
-	public Tank(int x, int y, Dir dir, Group group, TankFrame tf) {
+	public Tank(int x, int y, Dir dir, Group group, GameModel gm) {
 		this.x = x;
 		this.y = y;
 		this.dir = dir;
 		this.group = group;
-		this.tf = tf;
+		this.gm = gm;
 		
 		rectTank.x = x;
 		rectTank.y = y;
@@ -83,7 +83,7 @@ public class Tank {
 	public void paint(Graphics g) {
 		
 		if(!this.living) {
-			tf.tanks.remove(this);
+			gm.tanks.remove(this);
 		}
 		
 		//画出坦克图片,根据方向，画出对应的图片

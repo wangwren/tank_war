@@ -25,7 +25,7 @@ public class Bullet {
 	public static int HEIGHT = ResourceMgr.bulletL.getHeight();
 	
 	//TankFrame的引用
-	private TankFrame tf = null;
+	private GameModel gm = null;
 	
 	//子弹状态，true表示活着；false表示屎了
 	private boolean living = true;
@@ -36,12 +36,12 @@ public class Bullet {
 	//维护一个碰撞检测使用到的类
 	Rectangle rectBullet = new Rectangle();
 
-	public Bullet(int x, int y, Dir dir, Group group, TankFrame tf) {
+	public Bullet(int x, int y, Dir dir, Group group, GameModel gm) {
 		this.x = x;
 		this.y = y;
 		this.dir = dir;
 		this.group = group;
-		this.tf = tf;
+		this.gm = gm;
 		
 		rectBullet.x = x;
 		rectBullet.y = y;
@@ -49,7 +49,7 @@ public class Bullet {
 		rectBullet.height = HEIGHT;
 		
 		//重构代码，在创建子弹时加入子弹集合中
-		this.tf.bullets.add(this);
+		gm.bullets.add(this);
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class Bullet {
 	public void paint(Graphics g) {
 		if(!living) {
 			//清除当前子弹，消除内存泄露问题
-			tf.bullets.remove(this);
+			gm.bullets.remove(this);
 		}
 		//根据方向画出子弹图片
 		switch (dir) { 
@@ -136,7 +136,7 @@ public class Bullet {
 			int eX = tank.getX() + tank.WIDTH / 2 - Explode.WIDTH / 2;
 			int eY = tank.getY() + tank.HEIGHT / 2 - Explode.HEIGHT / 2;
 			//碰撞了就创建爆炸
-			tf.explodes.add(new Explode(eX,eY,tf));
+			gm.explodes.add(new Explode(eX,eY,gm));
 		}
 	}
 

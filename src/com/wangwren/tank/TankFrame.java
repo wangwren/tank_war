@@ -17,15 +17,8 @@ public class TankFrame extends Frame {
 	public static final int GAME_WIDTH = 1080;
 	public static final int GAME_HEIGHT = 960;
 	
-	//创建一个坦克，在200,200位置，方向朝下
-	Tank myTank = new Tank(200, 600, Dir.DOWN,Group.GOOD,this);
-	//加入子弹
-	List<Bullet> bullets = new ArrayList<>();
-	//加入敌军坦克
-	List<Tank> tanks = new ArrayList<Tank>();
-	//加入爆炸
-	List<Explode> explodes = new ArrayList<Explode>();
-	
+	//只需要持有GameModel就行了
+	GameModel gm = new GameModel();
 	
 	public TankFrame() {
 		this.setSize(GAME_WIDTH, GAME_HEIGHT);
@@ -48,7 +41,7 @@ public class TankFrame extends Frame {
 		});
 		this.setVisible(true);
 		//自己坦克默认不动
-		myTank.setMoving(false);
+		gm.getMainTank().setMoving(false);
 	}
 	
 	/**
@@ -82,50 +75,9 @@ public class TankFrame extends Frame {
 	 */
 	@Override
 	public void paint(Graphics g) {
-		Color color = g.getColor();
-		g.setColor(Color.WHITE);
-		g.drawString("屏幕中子弹数量:" + bullets.size(), 10, 50);
-		g.drawString("屏幕坦克数量:" + tanks.size(), 10, 70);
-		g.drawString("屏幕中爆炸数量" + explodes.size(), 10, 90);
-		g.setColor(color);
 		
-		//让坦克自己把自己画出来，只有自己知道应该画在哪
-		myTank.paint(g);
-		//b.paint(g);
-		//方式一：画出子弹，使用循环，注意循环的使用方式
-		for(int i = 0 ; i < bullets.size() ; i++) {
-			bullets.get(i).paint(g);
-		}
-		
-		/*
-		 * 方式二：使用Iterator迭代删除
-		 * 不可以使用foreach迭代。因为调用了paint方法，该方法中有判断，调用了remove方法。会报错。
-		 * for(Iterator<Bullet> iterator = bullets.iterator() ; iterator.hasNext() ;) {
-			Bullet bullet = iterator.next();
-			bullet.paint(g);
-			if(!bullet.isLiving()) {
-				iterator.remove();
-			}
-		}*/
-		
-		//画出敌军坦克
-		for(int i = 0 ; i < tanks.size() ; i ++) {
-			tanks.get(i).paint(g);
-		}
-		
-		//子弹与敌军坦克碰撞检测.
-		//每次重画都检测一下每一个子弹与敌军坦克是否碰撞了。
-		for(int i = 0 ; i < bullets.size() ; i ++) {
-			for(int j = 0 ; j < tanks.size() ; j ++) {
-				//检测
-				bullets.get(i).collideWith(tanks.get(j));
-			}
-		}
-		
-		//画爆炸
-		for(int i = 0 ; i < explodes.size() ; i ++) {
-			explodes.get(i).paint(g);
-		}
+		//交给GameModel来画
+		gm.paint(g);
 	}
 	
 	//内部类，键盘按下事件
@@ -172,6 +124,7 @@ public class TankFrame extends Frame {
 		//键盘松开事件,增加ctrl键打出炮弹
 		@Override
 		public void keyReleased(KeyEvent e) {
+			
 			int keyCode = e.getKeyCode();
 			switch (keyCode) {
 				//按了方向键左
@@ -192,7 +145,7 @@ public class TankFrame extends Frame {
 					break;
 				//按下了ctrl键,抬起来时触发
 				case KeyEvent.VK_CONTROL:
-					myTank.fire();
+					gm.getMainTank().fire();
 					break;
 			}
 			
@@ -204,7 +157,7 @@ public class TankFrame extends Frame {
 		 * 通过四个Boolean值来确定坦克方向，和判断坦克是否静止
 		 */
 		private void setMainTankDir() {
-			
+			Tank myTank = gm.getMainTank();
 			if(!bl && !bu && !br && !bd) {
 				//如果四个键都没按，那么坦克静止
 				myTank.setMoving(false);
