@@ -1,2 +1,5 @@
 # 初始化坦克的数量
 initTankCount=10
+# 指定开火策略
+goodFS=com.wangwren.tank.FourDirFireStrategy
+badFS=com.wangwren.tank.DeafultFireStrategy

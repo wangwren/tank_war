@@ -47,6 +47,9 @@ public class Bullet {
 		rectBullet.y = y;
 		rectBullet.width = WIDTH;
 		rectBullet.height = HEIGHT;
+		
+		//重构代码，在创建子弹时加入子弹集合中
+		this.tf.bullets.add(this);
 	}
 
 	/**

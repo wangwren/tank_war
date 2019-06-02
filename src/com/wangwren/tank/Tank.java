@@ -37,7 +37,10 @@ public class Tank {
 	private Random random = new Random();
 	
 	//拿一下TankFrame的引用，需要设置子弹
-	private TankFrame tf = null;
+	TankFrame tf = null;
+	
+	//定义坦克开火策略
+	private FireStrategy fs;
 	
 	Rectangle rectTank = new Rectangle();
 
@@ -52,6 +55,25 @@ public class Tank {
 		rectTank.y = y;
 		rectTank.width = WIDTH;
 		rectTank.height = HEIGHT;
+		
+		//创建坦克时，根据分组指定开火策略
+		if(this.getGroup() == Group.GOOD) {
+			//通过配置文件指定开火策略
+			String goodFS = (String) PropertyMgr.getProp("goodFS");
+			try {
+				//Class.forName指定类的全路径名，将该类加载到内存中，之后使用newInstance实例化该类
+				fs = (FireStrategy) Class.forName(goodFS).newInstance();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}else {
+			String badFS = (String) PropertyMgr.getProp("badFS");
+			try {
+				fs = (FireStrategy) Class.forName(badFS).newInstance();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -158,15 +180,7 @@ public class Tank {
 	 * 坦克开火
 	 */
 	public void fire() {
-		//tf.b = new Bullet(x, y, dir);
-		//计算出子弹位置
-		int bX = x + WIDTH / 2 - Bullet.WIDTH / 2;
-		int bY = y + HEIGHT / 2 - Bullet.HEIGHT / 2;
-		//创建的子弹跟随坦克的方向和分组
-		tf.bullets.add(new Bullet(bX, bY, this.dir,this.group,this.tf));
-		
-		//自己的坦克开火声音
-		if(this.group == Group.GOOD) new Thread(()->new Audio("audio/tank_fire.wav").play()).start();
+		fs.fire(this);
 	}
 	
 	/**
