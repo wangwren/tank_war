@@ -17,6 +17,11 @@ public class Tank extends GameObject {
 	//坦克位置
 	private int x;
 	private int y;
+	
+	//记录坦克的上一次移动位置
+	private int oldX;
+	private int oldY;
+	
 	//坦克方向
 	private Dir dir;
 	
@@ -44,11 +49,12 @@ public class Tank extends GameObject {
 	//定义坦克开火策略
 	private FireStrategy fs;
 	
-	Rectangle rectTank = new Rectangle();
+	private Rectangle rectTank = new Rectangle();
 
 	public Tank(int x, int y, Dir dir, Group group, GameModel gm) {
 		this.x = x;
 		this.y = y;
+		
 		this.dir = dir;
 		this.group = group;
 		this.gm = gm;
@@ -118,6 +124,11 @@ public class Tank extends GameObject {
 		if(!moving) {
 			return;
 		}
+		
+		//移动之前，记录一下坦克上一次移动的位置
+		this.oldX = x;
+		this.oldY = y;
+		
 		//判断坦克方向
 		switch (dir) {
 			case LEFT:
@@ -192,7 +203,15 @@ public class Tank extends GameObject {
 	public void die() {
 		this.living = false;
 	}
-
+	
+	/**
+	 * 坦克停止
+	 * @return
+	 */
+	public void tankStop() {
+		this.moving = false;
+	}
+	
 	public Dir getDir() {
 		return dir;
 	}
@@ -231,6 +250,26 @@ public class Tank extends GameObject {
 
 	public void setGroup(Group group) {
 		this.group = group;
+	}
+
+	public Rectangle getRectTank() {
+		return rectTank;
+	}
+
+	public int getOldX() {
+		return oldX;
+	}
+
+	public void setOldX(int oldX) {
+		this.oldX = oldX;
+	}
+
+	public int getOldY() {
+		return oldY;
+	}
+
+	public void setOldY(int oldY) {
+		this.oldY = oldY;
 	}	
 	
 }

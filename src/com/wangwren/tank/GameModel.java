@@ -5,6 +5,11 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.wangwren.tank.cor.BulletTankCollider;
+import com.wangwren.tank.cor.Collider;
+import com.wangwren.tank.cor.ColliderChain;
+import com.wangwren.tank.cor.TankTankCollider;
+
 /**
  * 门面，用来存放TankFrame中的物体，封装好直接给TankFrame画就行了
  * 
@@ -24,6 +29,11 @@ public class GameModel {
 	
 	//只需要有一个物体的共同父类就可以了
 	private List<GameObject> gameObjects = new ArrayList<>();
+	
+	//碰撞检测接口
+//	private Collider collider = new BulletTankCollider();
+//	private Collider collider2 = new TankTankCollider();
+	private ColliderChain colliderChain = new ColliderChain();
 
 	public GameModel() {
 		// 敌军坦克数量
@@ -62,7 +72,17 @@ public class GameModel {
 			gameObjects.get(i).paint(g);
 		}
 		
-		//碰撞检测需要使用责任链模式，这里就是写策略模式，之后将其连接起来
+		//碰撞检测需要使用责任链模式，这里就是写策略模式，之后将其连接
+		for(int i = 0; i < gameObjects.size(); i ++) {
+			for(int j = i + 1; j < gameObjects.size(); j++) {
+//				collider.collide(gameObjects.get(i), gameObjects.get(j));
+//				collider2.collide(gameObjects.get(i), gameObjects.get(j));
+				
+				//使用责任链，将每一个物体都走每个链
+				//这里虽然使用的是责任链的collider方法，但是该方法又便利了链中的具体Collider类，所以每个链都会去检测
+				colliderChain.collide(gameObjects.get(i), gameObjects.get(j));
+			}
+		}
 		
 		// b.paint(g);
 		// 方式一：画出子弹，使用循环，注意循环的使用方式

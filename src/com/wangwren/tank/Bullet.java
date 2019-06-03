@@ -25,7 +25,7 @@ public class Bullet extends GameObject {
 	public static int HEIGHT = ResourceMgr.bulletL.getHeight();
 	
 	//TankFrame的引用
-	private GameModel gm = null;
+	public GameModel gm = null;
 	
 	//子弹状态，true表示活着；false表示屎了
 	private boolean living = true;
@@ -34,7 +34,7 @@ public class Bullet extends GameObject {
 	private Group group = Group.BAD;
 	
 	//维护一个碰撞检测使用到的类
-	Rectangle rectBullet = new Rectangle();
+	private Rectangle rectBullet = new Rectangle();
 
 	public Bullet(int x, int y, Dir dir, Group group, GameModel gm) {
 		this.x = x;
@@ -118,34 +118,46 @@ public class Bullet extends GameObject {
 	 * 如果碰撞了，那么坦克死，子弹死
 	 * @param tank
 	 */
-	public void collideWith(Tank tank) {
-		//好友互伤模式关闭
-		if(this.group.equals(tank.getGroup())) {
-			return;
-		}
-		//子弹
-		//Rectangle rect1 = new Rectangle(this.x,this.y,WIDTH,HEIGHT);
-		//坦克
-		//Rectangle rect2 = new Rectangle(tank.getX(),tank.getY(),tank.WIDTH,tank.HEIGHT);
-		
-		if(rectBullet.intersects(tank.rectTank)) {
-			//如果碰撞，那么子弹死，坦克死
-			this.die();
-			tank.die();
-			
-			//爆炸位置
-			int eX = tank.getX() + tank.WIDTH / 2 - Explode.WIDTH / 2;
-			int eY = tank.getY() + tank.HEIGHT / 2 - Explode.HEIGHT / 2;
-			//碰撞了就创建爆炸
-			gm.addGameObject(new Explode(eX,eY,gm));
-		}
-	}
+//	public void collideWith(Tank tank) {
+//		//好友互伤模式关闭
+//		if(this.group.equals(tank.getGroup())) {
+//			return;
+//		}
+//		//子弹
+//		//Rectangle rect1 = new Rectangle(this.x,this.y,WIDTH,HEIGHT);
+//		//坦克
+//		//Rectangle rect2 = new Rectangle(tank.getX(),tank.getY(),tank.WIDTH,tank.HEIGHT);
+//		
+//		if(rectBullet.intersects(tank.rectTank)) {
+//			//如果碰撞，那么子弹死，坦克死
+//			this.die();
+//			tank.die();
+//			
+//			//爆炸位置
+//			int eX = tank.getX() + tank.WIDTH / 2 - Explode.WIDTH / 2;
+//			int eY = tank.getY() + tank.HEIGHT / 2 - Explode.HEIGHT / 2;
+//			//碰撞了就创建爆炸
+//			gm.addGameObject(new Explode(eX,eY,gm));
+//		}
+//	}
 
 	/**
 	 * 子弹死
 	 */
-	private void die() {
+	public void die() {
 		this.living = false;
+	}
+
+	public Rectangle getRectBullet() {
+		return rectBullet;
+	}
+
+	public Group getGroup() {
+		return group;
+	}
+
+	public void setGroup(Group group) {
+		this.group = group;
 	}
 	
 }
