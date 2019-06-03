@@ -8,7 +8,7 @@ import java.awt.Rectangle;
  * @author wwr
  *
  */
-public class Explode {
+public class Explode extends GameObject {
 
 	//爆炸位置
 	private int x;
@@ -37,13 +37,14 @@ public class Explode {
 	 * 爆炸把自己画出来，每一次paint，step都+1
 	 * @param g
 	 */
+	@Override
 	public void paint(Graphics g) {
 		g.drawImage(ResourceMgr.explodes[step++], this.x, this.y, null);
 		
 		if(step >= 15) {
 			//step = 0;
 			//爆炸图片显示完成后，从集合中移除
-			gm.explodes.remove(this);
+			gm.removeGameObject(this);
 		}
 	}
 	

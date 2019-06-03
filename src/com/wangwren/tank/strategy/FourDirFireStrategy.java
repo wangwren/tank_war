@@ -1,4 +1,10 @@
-package com.wangwren.tank;
+package com.wangwren.tank.strategy;
+
+import com.wangwren.tank.Audio;
+import com.wangwren.tank.Bullet;
+import com.wangwren.tank.Dir;
+import com.wangwren.tank.Group;
+import com.wangwren.tank.Tank;
 
 /**
  * 四个方向的开火策略

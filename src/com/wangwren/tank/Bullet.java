@@ -9,7 +9,7 @@ import java.awt.Rectangle;
  * @author wwr
  *
  */
-public class Bullet {
+public class Bullet extends GameObject {
 
 	//子弹位置
 	private int x;
@@ -49,17 +49,18 @@ public class Bullet {
 		rectBullet.height = HEIGHT;
 		
 		//重构代码，在创建子弹时加入子弹集合中
-		gm.bullets.add(this);
+		gm.addGameObject(this);
 	}
 
 	/**
 	 * 子弹把自己画出来
 	 * @param g
 	 */
+	@Override
 	public void paint(Graphics g) {
 		if(!living) {
 			//清除当前子弹，消除内存泄露问题
-			gm.bullets.remove(this);
+			gm.removeGameObject(this);
 		}
 		//根据方向画出子弹图片
 		switch (dir) { 
@@ -136,7 +137,7 @@ public class Bullet {
 			int eX = tank.getX() + tank.WIDTH / 2 - Explode.WIDTH / 2;
 			int eY = tank.getY() + tank.HEIGHT / 2 - Explode.HEIGHT / 2;
 			//碰撞了就创建爆炸
-			gm.explodes.add(new Explode(eX,eY,gm));
+			gm.addGameObject(new Explode(eX,eY,gm));
 		}
 	}
 

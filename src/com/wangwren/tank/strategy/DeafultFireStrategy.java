@@ -1,4 +1,10 @@
-package com.wangwren.tank;
+package com.wangwren.tank.strategy;
+
+import com.wangwren.tank.Audio;
+import com.wangwren.tank.Bullet;
+import com.wangwren.tank.Group;
+import com.wangwren.tank.Tank;
+
 /**
  * 默认开火策略，一下打出一发子弹
  * @author wwr

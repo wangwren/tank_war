@@ -5,12 +5,14 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.Random;
 
+import com.wangwren.tank.strategy.FireStrategy;
+
 /**
  * 坦克类
  * @author wwr
  *
  */
-public class Tank {
+public class Tank extends GameObject {
 	
 	//坦克位置
 	private int x;
@@ -37,7 +39,7 @@ public class Tank {
 	private Random random = new Random();
 	
 	//拿一下GameModel的引用，需要设置子弹
-	GameModel gm = null;
+	public GameModel gm = null;
 	
 	//定义坦克开火策略
 	private FireStrategy fs;
@@ -80,10 +82,11 @@ public class Tank {
 	 * 画坦克
 	 * @param g
 	 */
+	@Override
 	public void paint(Graphics g) {
 		
 		if(!this.living) {
-			gm.tanks.remove(this);
+			gm.removeGameObject(this);
 		}
 		
 		//画出坦克图片,根据方向，画出对应的图片
