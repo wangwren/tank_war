@@ -20,11 +20,13 @@ public class TankTankCollider implements Collider {
 			if(tank1.getRectTank().intersects(tank2.getRectTank())) {
 				//tank1.tankStop();
 				//坦克碰撞之后，移动到上一次的位置
-				tank1.setX(tank1.getOldX());
-				tank1.setY(tank1.getOldY());
-				
-				tank2.setX(tank2.getOldX());
-				tank2.setOldY(tank2.getOldY());
+//				tank1.setX(tank1.getOldX());
+//				tank1.setY(tank1.getOldY());
+//				
+//				tank2.setX(tank2.getOldX());
+//				tank2.setOldY(tank2.getOldY());
+				tank1.back();
+				tank2.back();
 			}
 		}
 		return true;

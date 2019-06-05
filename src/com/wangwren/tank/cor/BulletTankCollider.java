@@ -2,6 +2,7 @@ package com.wangwren.tank.cor;
 
 import com.wangwren.tank.Bullet;
 import com.wangwren.tank.Explode;
+import com.wangwren.tank.GameModel;
 import com.wangwren.tank.GameObject;
 import com.wangwren.tank.Tank;
 
@@ -44,7 +45,7 @@ public class BulletTankCollider implements Collider {
 				int eX = tank.getX() + tank.WIDTH / 2 - Explode.WIDTH / 2;
 				int eY = tank.getY() + tank.HEIGHT / 2 - Explode.HEIGHT / 2;
 				//碰撞了就创建爆炸
-				bullet.gm.addGameObject(new Explode(eX,eY,bullet.gm));
+				GameModel.getInstance().addGameObject(new Explode(eX,eY));
 				
 				return false;
 			}

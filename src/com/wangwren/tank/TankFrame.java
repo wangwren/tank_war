@@ -18,7 +18,7 @@ public class TankFrame extends Frame {
 	public static final int GAME_HEIGHT = 960;
 	
 	//只需要持有GameModel就行了
-	GameModel gm = new GameModel();
+	//GameModel gm = new GameModel();
 	
 	public TankFrame() {
 		this.setSize(GAME_WIDTH, GAME_HEIGHT);
@@ -41,7 +41,7 @@ public class TankFrame extends Frame {
 		});
 		this.setVisible(true);
 		//自己坦克默认不动
-		gm.getMainTank().setMoving(false);
+		GameModel.getInstance().getMainTank().setMoving(false);
 	}
 	
 	/**
@@ -77,7 +77,7 @@ public class TankFrame extends Frame {
 	public void paint(Graphics g) {
 		
 		//交给GameModel来画
-		gm.paint(g);
+		GameModel.getInstance().paint(g);
 	}
 	
 	//内部类，键盘按下事件
@@ -145,7 +145,7 @@ public class TankFrame extends Frame {
 					break;
 				//按下了ctrl键,抬起来时触发
 				case KeyEvent.VK_CONTROL:
-					gm.getMainTank().fire();
+					GameModel.getInstance().getMainTank().fire();
 					break;
 			}
 			
@@ -157,7 +157,7 @@ public class TankFrame extends Frame {
 		 * 通过四个Boolean值来确定坦克方向，和判断坦克是否静止
 		 */
 		private void setMainTankDir() {
-			Tank myTank = gm.getMainTank();
+			Tank myTank = GameModel.getInstance().getMainTank();
 			if(!bl && !bu && !br && !bd) {
 				//如果四个键都没按，那么坦克静止
 				myTank.setMoving(false);

@@ -19,7 +19,7 @@ public class Explode extends GameObject {
 	public static int HEIGHT = ResourceMgr.explodes[0].getHeight();
 	
 	//GameModel的引用
-	private GameModel gm = null;
+	//private GameModel gm = null;
 	
 	//爆炸状态，true表示活着；false表示屎了
 	private boolean living = true;
@@ -27,10 +27,10 @@ public class Explode extends GameObject {
 	//标识爆炸图片画到第几个
 	private int step = 0;
 
-	public Explode(int x, int y, GameModel gm) {
+	public Explode(int x, int y) {
 		this.x = x;
 		this.y = y;
-		this.gm = gm;
+		//this.gm = gm;
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class Explode extends GameObject {
 		if(step >= 15) {
 			//step = 0;
 			//爆炸图片显示完成后，从集合中移除
-			gm.removeGameObject(this);
+			GameModel.getInstance().removeGameObject(this);
 		}
 	}
 	

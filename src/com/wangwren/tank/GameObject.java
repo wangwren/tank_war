@@ -11,9 +11,9 @@ import java.awt.Graphics;
  */
 public abstract class GameObject {
 
-	//位置
-	private int x;
-	private int y;
+	//位置,子类可见
+	protected int x;
+	protected int y;
 	
 	/**
 	 * 共有的 画 方法，所有的物体都需要自己把自己画出来

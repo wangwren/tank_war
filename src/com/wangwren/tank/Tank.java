@@ -14,9 +14,9 @@ import com.wangwren.tank.strategy.FireStrategy;
  */
 public class Tank extends GameObject {
 	
-	//坦克位置
-	private int x;
-	private int y;
+	//坦克位置，父类中有
+//	private int x;
+//	private int y;
 	
 	//记录坦克的上一次移动位置
 	private int oldX;
@@ -44,20 +44,20 @@ public class Tank extends GameObject {
 	private Random random = new Random();
 	
 	//拿一下GameModel的引用，需要设置子弹
-	public GameModel gm = null;
+	//public GameModel gm = null;
 	
 	//定义坦克开火策略
 	private FireStrategy fs;
 	
 	private Rectangle rectTank = new Rectangle();
 
-	public Tank(int x, int y, Dir dir, Group group, GameModel gm) {
+	public Tank(int x, int y, Dir dir, Group group) {
 		this.x = x;
 		this.y = y;
 		
 		this.dir = dir;
 		this.group = group;
-		this.gm = gm;
+		//this.gm = gm;
 		
 		rectTank.x = x;
 		rectTank.y = y;
@@ -82,6 +82,10 @@ public class Tank extends GameObject {
 				e.printStackTrace();
 			}
 		}
+		if(this.group != Group.GOOD) {
+			GameModel.getInstance().addGameObject(this);
+		}
+		
 	}
 
 	/**
@@ -92,7 +96,7 @@ public class Tank extends GameObject {
 	public void paint(Graphics g) {
 		
 		if(!this.living) {
-			gm.removeGameObject(this);
+			GameModel.getInstance().removeGameObject(this);
 		}
 		
 		//画出坦克图片,根据方向，画出对应的图片
@@ -210,6 +214,14 @@ public class Tank extends GameObject {
 	 */
 	public void tankStop() {
 		this.moving = false;
+	}
+	
+	/**
+	 * 坦克退回到上一次移动位置
+	 */
+	public void back() {
+		this.x = this.oldX;
+		this.y = this.oldY;
 	}
 	
 	public Dir getDir() {

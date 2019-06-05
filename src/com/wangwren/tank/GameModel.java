@@ -19,30 +19,48 @@ import com.wangwren.tank.cor.TankTankCollider;
 public class GameModel {
 
 	// 创建一个坦克，在200,200位置，方向朝下
-	Tank myTank = new Tank(200, 600, Dir.DOWN, Group.GOOD, this);
-//	// 加入子弹
-//	List<Bullet> bullets = new ArrayList<>();
-//	// 加入敌军坦克
-//	List<Tank> tanks = new ArrayList<Tank>();
-//	// 加入爆炸
-//	List<Explode> explodes = new ArrayList<Explode>();
+	Tank myTank = null;
 	
 	//只需要有一个物体的共同父类就可以了
 	private List<GameObject> gameObjects = new ArrayList<>();
 	
-	//碰撞检测接口
-//	private Collider collider = new BulletTankCollider();
-//	private Collider collider2 = new TankTankCollider();
 	private ColliderChain colliderChain = new ColliderChain();
+	
+	private static final GameModel INSTANCE = new GameModel();
+	
+	static {
+		//防止循环new，因为改成单例了，就直接获取GameModel对象就可以了，但是这样在new坦克的时候又要new INSTANCE即GameModel
+		//所以单写一个方法，在类加载时初始化
+		INSTANCE.init();
+	}
 
-	public GameModel() {
+	private GameModel() {
+		
+	}
+	
+	public static GameModel getInstance() {
+		return INSTANCE;
+	}
+	
+	/**
+	 * 初始化
+	 */
+	public void init() {
+		//在坦克的构造方法中，会将坦克加入至GameObject中，主坦克也会加入，这样就会导致主坦克也会被打死
+		myTank = new Tank(200, 600, Dir.DOWN, Group.GOOD);
 		// 敌军坦克数量
 		int initTankCount = Integer.parseInt((String) PropertyMgr.getProp("initTankCount"));
 
 		// 创建敌军坦克
 		for (int i = 0; i < initTankCount; i++) {
-			addGameObject(new Tank(100 + i * 80, 300, Dir.DOWN, Group.BAD, this));
+			new Tank(50 + i * 80, 300, Dir.DOWN, Group.BAD);
 		}
+				
+		// 初始化墙
+		new Wall(150, 150, 200, 50);
+		new Wall(550, 150, 200, 50);
+		new Wall(300, 300, 50, 200);
+		new Wall(550, 300, 50, 200);
 	}
 	
 	/**
@@ -53,6 +71,9 @@ public class GameModel {
 	}
 	
 	public void removeGameObject(GameObject gameObject) {
+//		if(gameObject instanceof Tank) {
+//			myTank = null;
+//		}
 		this.gameObjects.remove(gameObject);
 	}
 
@@ -64,7 +85,7 @@ public class GameModel {
 //		g.drawString("屏幕中爆炸数量" + explodes.size(), 10, 90);
 //		g.setColor(color);
 
-		// 让坦克自己把自己画出来，只有自己知道应该画在哪
+		// 让坦克自己把自己画出来，只有自己知道应该画在哪,将GameModel改成单例后，主坦克可以不用自己画了。
 		myTank.paint(g);
 		
 		//调用GameObject的画方法

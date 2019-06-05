@@ -12,8 +12,8 @@ import java.awt.Rectangle;
 public class Bullet extends GameObject {
 
 	//子弹位置
-	private int x;
-	private int y;
+//	private int x;
+//	private int y;
 	
 	//子弹方向，应该跟随坦克方向
 	private Dir dir;
@@ -25,7 +25,7 @@ public class Bullet extends GameObject {
 	public static int HEIGHT = ResourceMgr.bulletL.getHeight();
 	
 	//TankFrame的引用
-	public GameModel gm = null;
+	//public GameModel gm = null;
 	
 	//子弹状态，true表示活着；false表示屎了
 	private boolean living = true;
@@ -36,12 +36,12 @@ public class Bullet extends GameObject {
 	//维护一个碰撞检测使用到的类
 	private Rectangle rectBullet = new Rectangle();
 
-	public Bullet(int x, int y, Dir dir, Group group, GameModel gm) {
+	public Bullet(int x, int y, Dir dir, Group group) {
 		this.x = x;
 		this.y = y;
 		this.dir = dir;
 		this.group = group;
-		this.gm = gm;
+		//this.gm = gm;
 		
 		rectBullet.x = x;
 		rectBullet.y = y;
@@ -49,7 +49,7 @@ public class Bullet extends GameObject {
 		rectBullet.height = HEIGHT;
 		
 		//重构代码，在创建子弹时加入子弹集合中
-		gm.addGameObject(this);
+		GameModel.getInstance().addGameObject(this);
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class Bullet extends GameObject {
 	public void paint(Graphics g) {
 		if(!living) {
 			//清除当前子弹，消除内存泄露问题
-			gm.removeGameObject(this);
+			GameModel.getInstance().removeGameObject(this);
 		}
 		//根据方向画出子弹图片
 		switch (dir) { 

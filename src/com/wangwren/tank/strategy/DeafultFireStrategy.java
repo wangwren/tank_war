@@ -19,7 +19,7 @@ public class DeafultFireStrategy implements FireStrategy{
 		int bX = tank.getX() + tank.WIDTH / 2 - Bullet.WIDTH / 2;
 		int bY = tank.getY() + tank.HEIGHT / 2 - Bullet.HEIGHT / 2;
 		//创建的子弹跟随坦克的方向和分组
-		new Bullet(bX, bY, tank.getDir(),tank.getGroup(),tank.gm);
+		new Bullet(bX, bY, tank.getDir(),tank.getGroup());
 		
 		//自己的坦克开火声音
 		if(tank.getGroup() == Group.GOOD) new Thread(()->new Audio("audio/tank_fire.wav").play()).start();
