@@ -1,6 +1,7 @@
 package com.wangwren.tank;
 
 import java.awt.Graphics;
+import java.io.Serializable;
 
 /**
  * 用于存放物体的共有属性和方法，所有的物体都需要继承该类，比如坦克、子弹等
@@ -9,7 +10,7 @@ import java.awt.Graphics;
  * @author wwr
  *
  */
-public abstract class GameObject {
+public abstract class GameObject implements Serializable {
 
 	//位置,子类可见
 	protected int x;

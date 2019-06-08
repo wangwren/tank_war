@@ -2,9 +2,17 @@ package com.wangwren.tank;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sun.corba.se.impl.orbutil.ObjectWriter;
 import com.wangwren.tank.cor.BulletTankCollider;
 import com.wangwren.tank.cor.Collider;
 import com.wangwren.tank.cor.ColliderChain;
@@ -145,5 +153,58 @@ public class GameModel {
 	 */
 	public Tank getMainTank() {
 		return myTank;
+	}
+	
+	/**
+	 * 按下S键松开时，保存Tank和其他对象至本地，存盘
+	 */
+	public void save() {
+		File file = new File("/Users/wwr/Desktop/tank.data");
+		ObjectOutputStream oos = null;
+		try {
+			oos = new ObjectOutputStream(new FileOutputStream(file));
+			oos.writeObject(myTank);
+			oos.writeObject(gameObjects);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if(oos != null) {
+				try {
+					oos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 按下L键松开时，加载存盘
+	 */
+	public void load() {
+		File file = new File("/Users/wwr/Desktop/tank.data");
+		ObjectInputStream ois = null;
+		try {
+			ois = new ObjectInputStream(new FileInputStream(file));
+			//先存的myTank，就先读myTank
+			myTank = (Tank)ois.readObject();
+			gameObjects = (List<GameObject>) ois.readObject();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			if(ois != null) {
+				try {
+					ois.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 }

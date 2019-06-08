@@ -1,0 +1,7 @@
+# 初始化坦克的数量
+initTankCount=5
+# 指定开火策略
+goodFS=com.wangwren.tank.strategy.FourDirFireStrategy
+badFS=com.wangwren.tank.strategy.DeafultFireStrategy
+# 碰撞检测
+colliders=com.wangwren.tank.cor.BulletTankCollider,com.wangwren.tank.cor.TankTankCollider,com.wangwren.tank.cor.BulletWallCollider,com.wangwren.tank.cor.TankWallCollider

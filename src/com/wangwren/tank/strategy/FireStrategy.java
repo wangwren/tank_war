@@ -1,5 +1,7 @@
 package com.wangwren.tank.strategy;
 
+import java.io.Serializable;
+
 import com.wangwren.tank.Tank;
 
 /**
@@ -7,6 +9,6 @@ import com.wangwren.tank.Tank;
  * @author wwr
  *
  */
-public interface FireStrategy {
+public interface FireStrategy extends Serializable {
 	void fire(Tank tank);
 }

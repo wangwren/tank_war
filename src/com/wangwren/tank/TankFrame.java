@@ -147,6 +147,14 @@ public class TankFrame extends Frame {
 				case KeyEvent.VK_CONTROL:
 					GameModel.getInstance().getMainTank().fire();
 					break;
+				//按下S键松开时，存盘
+				case KeyEvent.VK_S:
+					GameModel.getInstance().save();
+					break;
+				//按下L键松开时，加载存盘
+				case KeyEvent.VK_L:
+					GameModel.getInstance().load();
+					break;
 			}
 			
 			//通过四个boolean值来确定坦克的方向
