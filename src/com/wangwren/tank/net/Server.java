@@ -19,6 +19,9 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 public class Server {
 	public static ChannelGroup clients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 	
+	/**
+	 * 服务器启动
+	 */
 	public void serverStart() {
 		EventLoopGroup bossGroup = new NioEventLoopGroup(1);
 		EventLoopGroup workerGroup = new NioEventLoopGroup(2);
@@ -32,7 +35,8 @@ public class Server {
 					protected void initChannel(SocketChannel ch) throws Exception {
 						ChannelPipeline pl = ch.pipeline();
 						//解码，在服务端加，都是在初始化时加，加在逻辑前
-						pl.addLast(new TankMsgDecoder())
+						pl.addLast(new TankJoinMsgEncoder())
+							.addLast(new TankJoinMsgDecoder())
 							.addLast(new ServerChildHandler());
 					}
 				})
@@ -62,35 +66,11 @@ class ServerChildHandler extends ChannelInboundHandlerAdapter { //SimpleChannleI
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		System.out.println("channelRead");
-		try {
-			TankMsg tm = (TankMsg)msg;
-		
-			System.out.println(tm);
-		} finally {
-			ReferenceCountUtil.release(msg);
-		}
-		/*ByteBuf buf = null;
-		try {
-			buf = (ByteBuf)msg;
-			
-			byte[] bytes = new byte[buf.readableBytes()];
-			buf.getBytes(buf.readerIndex(), bytes);
-			String s = new String(bytes);
-			
-			if(s.equals("_bye_")) {
-				Server.clients.remove(ctx.channel());
-				ctx.close();
-			} else {
-				Server.clients.writeAndFlush(msg);
-			}*/
-			
-			//System.out.println(buf);
-			//System.out.println(buf.refCnt());
-		/*} finally {
-			//if(buf != null && buf) ReferenceCountUtil.release(buf);
-			//System.out.println(buf.refCnt());
-		}*/
+		//在服务器端界面查看发送的消息信息
+		ServerFrame.INSTANCE.updateClientMsg(msg.toString());
+		//读到客户端消息处理啊，需要往每一个客户端去写啊
+		//ctx.writeAndFlush(msg);
+		Server.clients.writeAndFlush(msg);
 	}
 
 	@Override

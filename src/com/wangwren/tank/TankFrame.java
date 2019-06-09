@@ -11,14 +11,21 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 public class TankFrame extends Frame {
 
+	public static final TankFrame INSTANCE = new TankFrame();
+	
 	public static final int GAME_WIDTH = 1080;
 	public static final int GAME_HEIGHT = 960;
 	
+	Random r = new Random();
+	
 	//创建一个坦克，在200,200位置，方向朝下
-	Tank myTank = new Tank(200, 600, Dir.DOWN,Group.GOOD,this);
+	//Tank myTank = new Tank(200, 600, Dir.DOWN,Group.GOOD,this);
+	Tank myTank = new Tank(r.nextInt(GAME_WIDTH), r.nextInt(GAME_HEIGHT), Dir.DOWN, Group.GOOD, this);
 	//加入子弹
 	List<Bullet> bullets = new ArrayList<>();
 	//加入敌军坦克
@@ -26,8 +33,37 @@ public class TankFrame extends Frame {
 	//加入爆炸
 	List<Explode> explodes = new ArrayList<Explode>();
 	
+	public void addTank(Tank tank) {
+		for(int i=0; i<tanks.size(); i++) {
+			//如果加入的坦克是tanks中已经有的，不加
+			if(tank.getId().equals(tanks.get(i).getId())) {
+				return;
+			}
+		}
+		tanks.add(tank);
+	}
 	
-	public TankFrame() {
+	
+	/**
+	 * 通过坦克的ID找出对应的坦克
+	 * @param id
+	 * @return
+	 */
+	public Tank findByUUID(UUID id) {
+		for(int i=0; i<tanks.size(); i++) {
+			if(id.equals(tanks.get(i).getId())) {
+				return tanks.get(i);
+			}
+		}
+		return null;
+	}
+	
+	//获取主站坦克
+	public Tank getMainTank() {
+		return this.myTank;
+	}
+	
+	private TankFrame() {
 		this.setSize(GAME_WIDTH, GAME_HEIGHT);
 		
 		//不允许窗口改变大小
@@ -46,9 +82,9 @@ public class TankFrame extends Frame {
 				System.exit(0);
 			}
 		});
-		this.setVisible(true);
+		//this.setVisible(true);
 		//自己坦克默认不动
-		myTank.setMoving(false);
+		//myTank.setMoving(false);
 	}
 	
 	/**

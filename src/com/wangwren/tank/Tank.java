@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.Random;
+import java.util.UUID;
+
+import com.wangwren.tank.net.TankJoinMsg;
 
 /**
  * 坦克类
@@ -18,11 +21,14 @@ public class Tank {
 	//坦克方向
 	private Dir dir;
 	
+	//UUID
+	private UUID id = UUID.randomUUID();
+	
 	//坦克速度
 	private static int SPEED = 5;
 	
 	//坦克是否移动，默认静止，false静止；true移动
-	private boolean moving = true;
+	private boolean moving = false;
 	
 	//坦克图片大小
 	public static int WIDTH = ResourceMgr.goodTankU.getWidth();
@@ -40,6 +46,15 @@ public class Tank {
 	private TankFrame tf = null;
 	
 	Rectangle rectTank = new Rectangle();
+	
+	public Tank(TankJoinMsg msg) {
+		this.x = msg.x;
+		this.y = msg.y;
+		this.dir = msg.dir;
+		this.moving = msg.moving;
+		this.group = msg.group;
+		this.id = msg.id;
+	}
 
 	public Tank(int x, int y, Dir dir, Group group, TankFrame tf) {
 		this.x = x;
@@ -63,6 +78,11 @@ public class Tank {
 		if(!this.living) {
 			tf.tanks.remove(this);
 		}
+		
+		Color c = g.getColor();
+		g.setColor(Color.YELLOW);
+		g.drawString(id.toString(), this.x, this.y - 10);
+		g.setColor(c);
 		
 		//画出坦克图片,根据方向，画出对应的图片
 		switch (dir) {
@@ -214,6 +234,14 @@ public class Tank {
 
 	public void setGroup(Group group) {
 		this.group = group;
+	}
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
 	}	
 	
 }

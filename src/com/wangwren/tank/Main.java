@@ -1,9 +1,12 @@
 package com.wangwren.tank;
 
+import com.wangwren.tank.net.Client;
+
 public class Main {
 
 	public static void main(String[] args) throws InterruptedException {
-		TankFrame f = new TankFrame();	
+		TankFrame f = TankFrame.INSTANCE;	
+		f.setVisible(true);
 		
 		//敌军坦克数量
 //		int initTankCount = Integer.parseInt((String)PropertyMgr.getProp("initTankCount"));
@@ -23,11 +26,24 @@ public class Main {
 		
 		//背景音乐
 		new Thread(()->new Audio("audio/war1.wav").loop()).start();
-		while(true) {
-			//死循环，一直执行
-			Thread.sleep(25);
-			//一直调用重画方法
-			f.repaint();
-		}
+		
+		//新启动一个线程去重画，否则卡在这连不上服务器了，一直死循环
+		new Thread(() -> {
+			while(true) { 
+				//死循环，一直执行
+				try {
+					Thread.sleep(25);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				//一直调用重画方法
+				f.repaint();
+			}
+		}).start();
+		
+		//客户端启动
+		Client client = new Client();
+		client.connect();
+		
 	}
 }
