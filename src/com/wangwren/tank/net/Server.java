@@ -35,8 +35,8 @@ public class Server {
 					protected void initChannel(SocketChannel ch) throws Exception {
 						ChannelPipeline pl = ch.pipeline();
 						//解码，在服务端加，都是在初始化时加，加在逻辑前
-						pl.addLast(new TankJoinMsgEncoder())
-							.addLast(new TankJoinMsgDecoder())
+						pl.addLast(new MsgEncoder())
+							.addLast(new MsgDecoder())
 							.addLast(new ServerChildHandler());
 					}
 				})

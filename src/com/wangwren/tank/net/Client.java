@@ -84,9 +84,9 @@ class ClientChannelInitializer extends ChannelInitializer<SocketChannel> {
 	protected void initChannel(SocketChannel ch) throws Exception {
 		ch.pipeline()
 			//加上编码，需要加在逻辑前
-			.addLast(new TankJoinMsgEncoder())
+			.addLast(new MsgEncoder())
 			//还需要解码
-			.addLast(new TankJoinMsgDecoder())
+			.addLast(new MsgDecoder())
 			.addLast(new ClientHandler());
 	}
 

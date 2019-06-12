@@ -15,7 +15,7 @@ import io.netty.handler.codec.ByteToMessageDecoder;
  * @author wwr
  *
  */
-public class TankJoinMsgDecoder extends ByteToMessageDecoder{
+public class MsgDecoder extends ByteToMessageDecoder{
 
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
@@ -42,11 +42,14 @@ public class TankJoinMsgDecoder extends ByteToMessageDecoder{
 		
 		switch (msgType) {
 		case TankJoin:
-			TankJoinMsg msg = new TankJoinMsg();
-			msg.parse(bytes);
-			out.add(msg);
+			TankJoinMsg tankJoinMsg = new TankJoinMsg();
+			tankJoinMsg.parse(bytes);
+			out.add(tankJoinMsg);
 			break;
-
+		case TankStartMoving:
+			TankStartMovingMsg tankStartMovingMsg = new TankStartMovingMsg();
+			tankStartMovingMsg.parse(bytes);
+			out.add(tankStartMovingMsg);
 		}
 	}
 

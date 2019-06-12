@@ -10,8 +10,8 @@ import com.wangwren.tank.Dir;
 import com.wangwren.tank.Group;
 import com.wangwren.tank.net.MsgType;
 import com.wangwren.tank.net.TankJoinMsg;
-import com.wangwren.tank.net.TankJoinMsgDecoder;
-import com.wangwren.tank.net.TankJoinMsgEncoder;
+import com.wangwren.tank.net.MsgDecoder;
+import com.wangwren.tank.net.MsgEncoder;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -27,7 +27,7 @@ public class TankJoinMsgCodecTest {
 		UUID id = UUID.randomUUID();
 		TankJoinMsg msg = new TankJoinMsg(5, 10, Dir.DOWN, true, Group.BAD, id);
 		ch.pipeline()
-			.addLast(new TankJoinMsgEncoder());
+			.addLast(new MsgEncoder());
 
 		ch.writeOutbound(msg);
 
@@ -63,7 +63,7 @@ public class TankJoinMsgCodecTest {
 		UUID id = UUID.randomUUID();
 		TankJoinMsg msg = new TankJoinMsg(5, 10, Dir.DOWN, true, Group.BAD, id);
 		ch.pipeline()
-			.addLast(new TankJoinMsgDecoder());
+			.addLast(new MsgDecoder());
 
 		ByteBuf buf = Unpooled.buffer();
 		buf.writeInt(MsgType.TankJoin.ordinal());

@@ -16,6 +16,9 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
+import com.wangwren.tank.net.Client;
+import com.wangwren.tank.net.TankStartMovingMsg;
+
 public class TankFrame extends Frame {
 
 	public static final TankFrame INSTANCE = new TankFrame();
@@ -266,6 +269,8 @@ public class TankFrame extends Frame {
 				if(bd) {
 					myTank.setDir(Dir.DOWN);
 				}
+				
+				Client.INSTANCE.send(new TankStartMovingMsg(getMainTank()));
 			}
 		}
 	}
