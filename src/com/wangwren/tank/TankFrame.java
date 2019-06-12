@@ -9,8 +9,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -29,18 +31,20 @@ public class TankFrame extends Frame {
 	//加入子弹
 	List<Bullet> bullets = new ArrayList<>();
 	//加入敌军坦克
-	List<Tank> tanks = new ArrayList<Tank>();
+	//List<Tank> tanks = new ArrayList<Tank>();
+	//改用map存放敌军坦克，改成网络版后，新加入的客户端坦克是敌军坦克
+	Map<UUID,Tank> tanks = new HashMap<>();
 	//加入爆炸
 	List<Explode> explodes = new ArrayList<Explode>();
 	
 	public void addTank(Tank tank) {
-		for(int i=0; i<tanks.size(); i++) {
-			//如果加入的坦克是tanks中已经有的，不加
-			if(tank.getId().equals(tanks.get(i).getId())) {
-				return;
-			}
-		}
-		tanks.add(tank);
+//		for(int i=0; i<tanks.size(); i++) {
+//			//如果加入的坦克是tanks中已经有的，不加
+//			if(tank.getId().equals(tanks.get(i).getId())) {
+//				return;
+//			}
+//		}
+		tanks.put(tank.getId(), tank);
 	}
 	
 	
@@ -50,12 +54,12 @@ public class TankFrame extends Frame {
 	 * @return
 	 */
 	public Tank findByUUID(UUID id) {
-		for(int i=0; i<tanks.size(); i++) {
-			if(id.equals(tanks.get(i).getId())) {
-				return tanks.get(i);
-			}
-		}
-		return null;
+//		for(int i=0; i<tanks.size(); i++) {
+//			if(id.equals(tanks.get(i).getId())) {
+//				return tanks.get(i);
+//			}
+//		}
+		return tanks.get(id);
 	}
 	
 	//获取主站坦克
@@ -145,9 +149,11 @@ public class TankFrame extends Frame {
 		}*/
 		
 		//画出敌军坦克
-		for(int i = 0 ; i < tanks.size() ; i ++) {
-			tanks.get(i).paint(g);
-		}
+//		for(int i = 0 ; i < tanks.size() ; i ++) {
+//			tanks.get(i).paint(g);
+//		}
+		
+		tanks.values().stream().forEach((e) -> e.paint(g));
 		
 		//子弹与敌军坦克碰撞检测.
 		//每次重画都检测一下每一个子弹与敌军坦克是否碰撞了。
