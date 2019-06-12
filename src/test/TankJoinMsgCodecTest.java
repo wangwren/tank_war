@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import com.wangwren.tank.Dir;
 import com.wangwren.tank.Group;
+import com.wangwren.tank.net.MsgType;
 import com.wangwren.tank.net.TankJoinMsg;
 import com.wangwren.tank.net.TankJoinMsgDecoder;
 import com.wangwren.tank.net.TankJoinMsgEncoder;
@@ -31,7 +32,9 @@ public class TankJoinMsgCodecTest {
 		ch.writeOutbound(msg);
 
 		ByteBuf buf = (ByteBuf)ch.readOutbound();
-
+		
+		MsgType msgType = MsgType.values()[buf.readInt()];
+		int length = buf.readInt();
 		int x = buf.readInt();
 		int y = buf.readInt();
 		int dirOrdinal = buf.readInt();
@@ -40,7 +43,10 @@ public class TankJoinMsgCodecTest {
 		int groupOrdinal = buf.readInt();
 		Group g = Group.values()[groupOrdinal];
 		UUID uuid = new UUID(buf.readLong(), buf.readLong());
+		
 
+		assertEquals(MsgType.TankJoin, msgType);
+		assertEquals(33, length);
 		assertEquals(5, x);
 		assertEquals(10, y);
 		assertEquals(Dir.DOWN, dir);
@@ -60,6 +66,8 @@ public class TankJoinMsgCodecTest {
 			.addLast(new TankJoinMsgDecoder());
 
 		ByteBuf buf = Unpooled.buffer();
+		buf.writeInt(MsgType.TankJoin.ordinal());
+		buf.writeInt(msg.toBytes().length);
 		buf.writeBytes(msg.toBytes());
 
 		ch.writeInbound(buf.duplicate());

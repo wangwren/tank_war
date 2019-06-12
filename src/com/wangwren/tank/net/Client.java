@@ -25,8 +25,11 @@ import io.netty.util.ReferenceCountUtil;
 
 public class Client {
 
+	public static final Client INSTANCE = new Client();
 	private Channel channel = null;
 
+	private Client() {}
+	
 	public void connect() {
 		//线程池
 		EventLoopGroup group = new NioEventLoopGroup(1);
@@ -60,9 +63,13 @@ public class Client {
 		}
 	}
 	
-	public void send(String msg) {
-		ByteBuf buf = Unpooled.copiedBuffer(msg.getBytes());
-		channel.writeAndFlush(buf);
+	/**
+	 * 发送消息
+	 * 一般用在为了给别的客户端显示当前客户端
+	 * @param msg
+	 */
+	public void send(Msg msg) {
+		channel.writeAndFlush(msg);
 	}
 
 	public void closeConnect() {
@@ -90,7 +97,7 @@ class ClientChannelInitializer extends ChannelInitializer<SocketChannel> {
  * @author wwr
  *
  */
-class ClientHandler extends SimpleChannelInboundHandler<TankJoinMsg> {
+class ClientHandler extends SimpleChannelInboundHandler<Msg> {
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -100,20 +107,19 @@ class ClientHandler extends SimpleChannelInboundHandler<TankJoinMsg> {
 	}
 
 	@Override
-	protected void channelRead0(ChannelHandlerContext ctx, TankJoinMsg msg) throws Exception {
+	protected void channelRead0(ChannelHandlerContext ctx, Msg msg) throws Exception {
 		//如果服务端返回的信息，坦克已经存在，那么不加
 		//这个返回的信息是对每一个客户端都发，如果是自己，那么就不会加，但是对于别的客户端，就是另一个坦克，就会加
-		if(msg.id.equals(TankFrame.INSTANCE.getMainTank().getId()) ||
-				TankFrame.INSTANCE.findByUUID(msg.id) != null) {
-			return;
-		}
+		msg.handle();
+		
+		//以下部分被一移到了对应的消息类的handle方法中执行
 		//创建一个新的坦克，是别的客户端的坦克
-		Tank tank = new Tank(msg);
+		//Tank tank = new Tank(msg);
 		//加入到自己的主界面中
-		TankFrame.INSTANCE.addTank(tank);
+		//TankFrame.INSTANCE.addTank(tank);
 		
 		//如果加了一个新的坦克，那么对于别的客户端，也要把自己也加上，所以要向服务端发自己的坦克信息，使别的客户端能看见自己
-		ctx.writeAndFlush(new TankJoinMsg(TankFrame.INSTANCE.getMainTank()));
+		//ctx.writeAndFlush(new TankJoinMsg(TankFrame.INSTANCE.getMainTank()));
 	}
 
 }

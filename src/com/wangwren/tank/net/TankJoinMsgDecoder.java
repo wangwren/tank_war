@@ -19,21 +19,35 @@ public class TankJoinMsgDecoder extends ByteToMessageDecoder{
 
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-		//这个值是需要算的
-		if(in.readableBytes() < 33) return; //TCP 拆包 粘包
+		//先判断是否够8个字节
+		if(in.readableBytes() < 8) return; //TCP 拆包 粘包
 		
-		//in.markReaderIndex();
+		//从byteBuf可以读的位置开始
+		in.markReaderIndex();
 		
-		TankJoinMsg msg = new TankJoinMsg();
+		//先获取消息类型，通过in读取前四个字节，即写的时候也是先写入的消息类型
+		MsgType msgType = MsgType.values()[in.readInt()];
+		//再读消息长度
+		int length = in.readInt();
+		if(in.readableBytes() < length) {
+			//再读取就是获取到具体消息了，如果消息长度小于length，说明读的不全，重新标置in，重读
+			in.resetReaderIndex();
+			return;
+		}
+		
+		//如果以上都符合，可以创建消息对象了
+		byte[] bytes = new byte[length];
+		//读数据进bytes数组
+		in.readBytes(bytes);
+		
+		switch (msgType) {
+		case TankJoin:
+			TankJoinMsg msg = new TankJoinMsg();
+			msg.parse(bytes);
+			out.add(msg);
+			break;
 
-		msg.x = in.readInt();
-		msg.y = in.readInt();
-		msg.dir = Dir.values()[in.readInt()];
-		msg.moving = in.readBoolean();
-		msg.group = Group.values()[in.readInt()];
-		msg.id = new UUID(in.readLong(), in.readLong());
-
-		out.add(msg);
+		}
 	}
 
 }

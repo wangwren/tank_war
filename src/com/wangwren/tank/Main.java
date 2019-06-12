@@ -42,8 +42,7 @@ public class Main {
 		}).start();
 		
 		//客户端启动
-		Client client = new Client();
-		client.connect();
+		Client.INSTANCE.connect();
 		
 	}
 }

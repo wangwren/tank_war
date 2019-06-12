@@ -10,13 +10,14 @@ import java.util.UUID;
 import com.wangwren.tank.Dir;
 import com.wangwren.tank.Group;
 import com.wangwren.tank.Tank;
+import com.wangwren.tank.TankFrame;
 
 /**
  * 坦克加入的消息
  * @author wwr
  *
  */
-public class TankJoinMsg {
+public class TankJoinMsg extends Msg {
 	public int x, y;
 	public Dir dir;
 	public boolean moving;
@@ -26,13 +27,14 @@ public class TankJoinMsg {
 
 	public TankJoinMsg() {}
 	
-	public TankJoinMsg(int x, int y, Dir dir, boolean moving, Group group,UUID id) {
+	public TankJoinMsg(int x, int y, Dir dir, boolean moving, Group group, UUID id) {
+		super();
 		this.x = x;
 		this.y = y;
 		this.dir = dir;
 		this.moving = moving;
 		this.group = group;
-		this.id = id;
+		this.id = id; 
 	}
 	
 	public TankJoinMsg(Tank tank) {
@@ -49,6 +51,7 @@ public class TankJoinMsg {
 	 * 注意读取的顺序，需要和写入的顺序一样
 	 * @param bytes
 	 */
+	@Override
 	public void parse(byte[] bytes) {
 		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(bytes));
 		try {
@@ -74,6 +77,7 @@ public class TankJoinMsg {
 	 * 将坦克加入信息转成字节数组，方便网络传输
 	 * @return
 	 */
+	@Override
 	public byte[] toBytes() {
 		ByteArrayOutputStream baos = null;
 		DataOutputStream dos = null;
@@ -125,5 +129,25 @@ public class TankJoinMsg {
 			   .append("group=" + group + " | ")
 			   .append("]");
 		return builder.toString();
+	}
+
+	@Override
+	public void handle() {
+		//如果加入的坦克是自己或者已经在自己的客户端中存在该坦克，那么不加
+		if(this.id.equals(TankFrame.INSTANCE.getMainTank().getId()) || TankFrame.INSTANCE.findByUUID(this.id) != null) {
+			return;
+		}
+		
+		//否则创建一个Tank，并加入自己的客户端中，并把自己也发送出去，让新加入的客户端能看见
+		Tank tank = new Tank(this);
+		TankFrame.INSTANCE.addTank(tank);
+		
+		//把自己当做消息发出去
+		Client.INSTANCE.send(new TankJoinMsg(TankFrame.INSTANCE.getMainTank()));
+	}
+
+	@Override
+	public MsgType getMsgType() {
+		return MsgType.TankJoin;
 	}
 }
